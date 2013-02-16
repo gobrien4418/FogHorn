@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FoghornModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008"
+              xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"
+              xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="FoghornModelStoreContainer">
+          <EntitySet Name="Subscribers" EntityType="FoghornModel.Store.Subscribers" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Notifications" EntityType="FoghornModel.Store.Notifications" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="SendingApplications" EntityType="FoghornModel.Store.SendingApplications" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="NotificationTypes" EntityType="FoghornModel.Store.NotificationTypes" store:Type="Tables"
+                     Schema="dbo" />
+          <EntitySet Name="SubscriberNotification" EntityType="FoghornModel.Store.SubscriberNotification"
+                     store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_SubscriberNotification_Subscriber"
+                          Association="FoghornModel.Store.FK_SubscriberNotification_Subscriber">
+            <End Role="Subscriber" EntitySet="Subscribers" />
+            <End Role="SubscriberNotification" EntitySet="SubscriberNotification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SubscriberNotification_Notification"
+                          Association="FoghornModel.Store.FK_SubscriberNotification_Notification">
+            <End Role="Notification" EntitySet="Notifications" />
+            <End Role="SubscriberNotification" EntitySet="SubscriberNotification" />
+          </AssociationSet>
+          <AssociationSet Name="SendingApplicationSubscriber"
+                          Association="FoghornModel.Store.SendingApplicationSubscriber">
+            <End Role="SendingApplication" EntitySet="SendingApplications" />
+            <End Role="Subscriber" EntitySet="Subscribers" />
+          </AssociationSet>
+          <AssociationSet Name="NotificationNotificationType"
+                          Association="FoghornModel.Store.NotificationNotificationType">
+            <End Role="Notification" EntitySet="Notifications" />
+            <End Role="NotificationType" EntitySet="NotificationTypes" />
+          </AssociationSet>
+          <AssociationSet Name="SendingApplicationNotificationType"
+                          Association="FoghornModel.Store.SendingApplicationNotificationType">
+            <End Role="SendingApplication" EntitySet="SendingApplications" />
+            <End Role="NotificationType" EntitySet="NotificationTypes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Subscribers">
+          <Key>
+            <PropertyRef Name="SubscriberId" />
+          </Key>
+          <Property Name="SubscriberId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SubscriberName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Port" Type="int" Nullable="true" />
+          <Property Name="HostName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Password" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <Property Name="SendingApplication_SendingApplicationId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Notifications">
+          <Key>
+            <PropertyRef Name="NotificationId" />
+          </Key>
+          <Property Name="NotificationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NotificationTitle" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="NotificationMessage" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SentDateTime" Type="datetime" Nullable="false" />
+          <Property Name="Priority" Type="int" Nullable="false" DefaultValue="0" />
+          <Property Name="Sticky" Type="bit" Nullable="false" DefaultValue="false" />
+          <Property Name="NotificationType_NotificationTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SendingApplications">
+          <Key>
+            <PropertyRef Name="SendingApplicationId" />
+          </Key>
+          <Property Name="SendingApplicationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SendingApplicationName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="SendingApplicationIcon" Type="varbinary(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="NotificationTypes">
+          <Key>
+            <PropertyRef Name="NotificationTypeId" />
+          </Key>
+          <Property Name="NotificationTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NotificationTypeName" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="NotificationTypeDisplayName" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="NotificationTypeIcon" Type="varbinary(max)" Nullable="true" />
+          <Property Name="SendingApplication_SendingApplicationId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SubscriberNotification">
+          <Key>
+            <PropertyRef Name="SentToSubscribers_SubscriberId" />
+            <PropertyRef Name="NotificationsSent_NotificationId" />
+          </Key>
+          <Property Name="SentToSubscribers_SubscriberId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="NotificationsSent_NotificationId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="SendingApplicationSubscriber">
+          <End Role="SendingApplication" Type="FoghornModel.Store.SendingApplications" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Subscriber" Type="FoghornModel.Store.Subscribers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SendingApplication">
+              <PropertyRef Name="SendingApplicationId" />
+            </Principal>
+            <Dependent Role="Subscriber">
+              <PropertyRef Name="SendingApplication_SendingApplicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="NotificationNotificationType">
+          <End Role="Notification" Type="FoghornModel.Store.Notifications" Multiplicity="*" />
+          <End Role="NotificationType" Type="FoghornModel.Store.NotificationTypes" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="NotificationType">
+              <PropertyRef Name="NotificationTypeId" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="NotificationType_NotificationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="SendingApplicationNotificationType">
+          <End Role="SendingApplication" Type="FoghornModel.Store.SendingApplications" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="NotificationType" Type="FoghornModel.Store.NotificationTypes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SendingApplication">
+              <PropertyRef Name="SendingApplicationId" />
+            </Principal>
+            <Dependent Role="NotificationType">
+              <PropertyRef Name="SendingApplication_SendingApplicationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubscriberNotification_Subscriber">
+          <End Role="Subscriber" Type="FoghornModel.Store.Subscribers" Multiplicity="1" />
+          <End Role="SubscriberNotification" Type="FoghornModel.Store.SubscriberNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subscriber">
+              <PropertyRef Name="SubscriberId" />
+            </Principal>
+            <Dependent Role="SubscriberNotification">
+              <PropertyRef Name="SentToSubscribers_SubscriberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SubscriberNotification_Notification">
+          <End Role="SubscriberNotification" Type="FoghornModel.Store.SubscriberNotification" Multiplicity="*" />
+          <End Role="Notification" Type="FoghornModel.Store.Notifications" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="Notification">
+              <PropertyRef Name="NotificationId" />
+            </Principal>
+            <Dependent Role="SubscriberNotification">
+              <PropertyRef Name="NotificationsSent_NotificationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FoghornModel" Alias="Self" p1:UseStrongSpatialTypes="false"
+              xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+              xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation"
+              xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="FoghornEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Subscribers" EntityType="FoghornModel.Subscriber" />
+          <EntitySet Name="Notifications" EntityType="FoghornModel.Notification" />
+          <AssociationSet Name="SubscriberNotification" Association="FoghornModel.SubscriberNotification">
+            <End Role="Subscriber" EntitySet="Subscribers" />
+            <End Role="Notification" EntitySet="Notifications" />
+          </AssociationSet>
+          <EntitySet Name="SendingApplications" EntityType="FoghornModel.SendingApplication" />
+          <AssociationSet Name="SendingApplicationSubscriber" Association="FoghornModel.SendingApplicationSubscriber">
+            <End Role="SendingApplication" EntitySet="SendingApplications" />
+            <End Role="Subscriber" EntitySet="Subscribers" />
+          </AssociationSet>
+          <EntitySet Name="NotificationTypes" EntityType="FoghornModel.NotificationType" />
+          <AssociationSet Name="NotificationNotificationType" Association="FoghornModel.NotificationNotificationType">
+            <End Role="Notification" EntitySet="Notifications" />
+            <End Role="NotificationType" EntitySet="NotificationTypes" />
+          </AssociationSet>
+          <AssociationSet Name="SendingApplicationNotificationType"
+                          Association="FoghornModel.SendingApplicationNotificationType">
+            <End Role="SendingApplication" EntitySet="SendingApplications" />
+            <End Role="NotificationType" EntitySet="NotificationTypes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Subscriber">
+          <Key>
+            <PropertyRef Name="SubscriberId" />
+          </Key>
+          <Property Type="Guid" Name="SubscriberId" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="String" Name="SubscriberName" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="Port" Nullable="true" />
+          <NavigationProperty Name="NotificationsSent" Relationship="FoghornModel.SubscriberNotification"
+                              FromRole="Subscriber" ToRole="Notification" />
+          <NavigationProperty Name="SendingApplication" Relationship="FoghornModel.SendingApplicationSubscriber"
+                              FromRole="Subscriber" ToRole="SendingApplication" />
+          <Property Type="String" Name="HostName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Password" Nullable="false" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="NotificationId" />
+          </Key>
+          <Property Type="Int32" Name="NotificationId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="SentToSubscribers" Relationship="FoghornModel.SubscriberNotification"
+                              FromRole="Notification" ToRole="Subscriber" />
+          <Property Type="String" Name="NotificationTitle" Nullable="false" />
+          <Property Type="String" Name="NotificationMessage" Nullable="false" />
+          <NavigationProperty Name="NotificationType" Relationship="FoghornModel.NotificationNotificationType"
+                              FromRole="Notification" ToRole="NotificationType" />
+          <Property Type="DateTime" Name="SentDateTime" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="Int32" Name="Priority" Nullable="false" DefaultValue="0" />
+          <Property Type="Boolean" Name="Sticky" Nullable="false" DefaultValue="False" />
+        </EntityType>
+        <Association Name="SubscriberNotification">
+          <End Type="FoghornModel.Subscriber" Role="Subscriber" Multiplicity="*" />
+          <End Type="FoghornModel.Notification" Role="Notification" Multiplicity="*">
+          </End>
+        </Association>
+        <EntityType Name="SendingApplication">
+          <Key>
+            <PropertyRef Name="SendingApplicationId" />
+          </Key>
+          <Property Type="Int32" Name="SendingApplicationId" Nullable="false"
+                    annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="SendingApplicationName" Nullable="false" MaxLength="255" />
+          <NavigationProperty Name="Subscribers" Relationship="FoghornModel.SendingApplicationSubscriber"
+                              FromRole="SendingApplication" ToRole="Subscriber" />
+          <NavigationProperty Name="NotificationTypes" Relationship="FoghornModel.SendingApplicationNotificationType"
+                              FromRole="SendingApplication" ToRole="NotificationType" />
+          <Property Type="Binary" Name="SendingApplicationIcon" Nullable="true" />
+        </EntityType>
+        <Association Name="SendingApplicationSubscriber">
+          <End Type="FoghornModel.SendingApplication" Role="SendingApplication" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoghornModel.Subscriber" Role="Subscriber" Multiplicity="*" />
+        </Association>
+        <EntityType Name="NotificationType">
+          <Key>
+            <PropertyRef Name="NotificationTypeId" />
+          </Key>
+          <Property Type="Int32" Name="NotificationTypeId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="NotificationTypeName" Nullable="false" MaxLength="32" />
+          <Property Type="String" Name="NotificationTypeDisplayName" Nullable="false" MaxLength="255" />
+          <NavigationProperty Name="SendingApplication" Relationship="FoghornModel.SendingApplicationNotificationType"
+                              FromRole="NotificationType" ToRole="SendingApplication" />
+          <Property Type="Binary" Name="NotificationTypeIcon" Nullable="true" />
+        </EntityType>
+        <Association Name="NotificationNotificationType">
+          <End Type="FoghornModel.Notification" Role="Notification" Multiplicity="*" />
+          <End Type="FoghornModel.NotificationType" Role="NotificationType" Multiplicity="1" />
+        </Association>
+        <Association Name="SendingApplicationNotificationType">
+          <End Type="FoghornModel.SendingApplication" Role="SendingApplication" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="FoghornModel.NotificationType" Role="NotificationType" Multiplicity="*">
+          </End>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FoghornModelStoreContainer"
+                                CdmEntityContainer="FoghornEntities">
+          <EntitySetMapping Name="Subscribers">
+            <EntityTypeMapping TypeName="IsTypeOf(FoghornModel.Subscriber)">
+              <MappingFragment StoreEntitySet="Subscribers">
+                <ScalarProperty Name="SubscriberId" ColumnName="SubscriberId" />
+                <ScalarProperty Name="SubscriberName" ColumnName="SubscriberName" />
+                <ScalarProperty Name="Port" ColumnName="Port" />
+                <ScalarProperty Name="HostName" ColumnName="HostName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="IsTypeOf(FoghornModel.Notification)">
+              <MappingFragment StoreEntitySet="Notifications">
+                <ScalarProperty Name="NotificationId" ColumnName="NotificationId" />
+                <ScalarProperty Name="NotificationTitle" ColumnName="NotificationTitle" />
+                <ScalarProperty Name="NotificationMessage" ColumnName="NotificationMessage" />
+                <ScalarProperty Name="SentDateTime" ColumnName="SentDateTime" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="Sticky" ColumnName="Sticky" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SendingApplications">
+            <EntityTypeMapping TypeName="IsTypeOf(FoghornModel.SendingApplication)">
+              <MappingFragment StoreEntitySet="SendingApplications">
+                <ScalarProperty Name="SendingApplicationId" ColumnName="SendingApplicationId" />
+                <ScalarProperty Name="SendingApplicationName" ColumnName="SendingApplicationName" />
+                <ScalarProperty Name="SendingApplicationIcon" ColumnName="SendingApplicationIcon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NotificationTypes">
+            <EntityTypeMapping TypeName="IsTypeOf(FoghornModel.NotificationType)">
+              <MappingFragment StoreEntitySet="NotificationTypes">
+                <ScalarProperty Name="NotificationTypeId" ColumnName="NotificationTypeId" />
+                <ScalarProperty Name="NotificationTypeName" ColumnName="NotificationTypeName" />
+                <ScalarProperty Name="NotificationTypeDisplayName" ColumnName="NotificationTypeDisplayName" />
+                <ScalarProperty Name="NotificationTypeIcon" ColumnName="NotificationTypeIcon" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="SubscriberNotification" TypeName="FoghornModel.SubscriberNotification"
+                                 StoreEntitySet="SubscriberNotification">
+            <EndProperty Name="Subscriber">
+              <ScalarProperty Name="SubscriberId" ColumnName="SentToSubscribers_SubscriberId" />
+            </EndProperty>
+            <EndProperty Name="Notification">
+              <ScalarProperty Name="NotificationId" ColumnName="NotificationsSent_NotificationId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="SendingApplicationSubscriber"
+                                 TypeName="FoghornModel.SendingApplicationSubscriber" StoreEntitySet="Subscribers">
+            <EndProperty Name="SendingApplication">
+              <ScalarProperty Name="SendingApplicationId" ColumnName="SendingApplication_SendingApplicationId" />
+            </EndProperty>
+            <EndProperty Name="Subscriber">
+              <ScalarProperty Name="SubscriberId" ColumnName="SubscriberId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="NotificationNotificationType"
+                                 TypeName="FoghornModel.NotificationNotificationType" StoreEntitySet="Notifications">
+            <EndProperty Name="NotificationType">
+              <ScalarProperty Name="NotificationTypeId" ColumnName="NotificationType_NotificationTypeId" />
+            </EndProperty>
+            <EndProperty Name="Notification">
+              <ScalarProperty Name="NotificationId" ColumnName="NotificationId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="SendingApplicationNotificationType"
+                                 TypeName="FoghornModel.SendingApplicationNotificationType"
+                                 StoreEntitySet="NotificationTypes">
+            <EndProperty Name="SendingApplication">
+              <ScalarProperty Name="SendingApplicationId" ColumnName="SendingApplication_SendingApplicationId" />
+            </EndProperty>
+            <EndProperty Name="NotificationType">
+              <ScalarProperty Name="NotificationTypeId" ColumnName="NotificationTypeId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
