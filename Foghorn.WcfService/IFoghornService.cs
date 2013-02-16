@@ -47,8 +47,5 @@ namespace Foghorn.WcfService
 
         [OperationContract]
         SendingApplicationDto GetSendingApplication(string sendingApplicationName);
-
-        [OperationContract]
-        SendingApplicationDto GetSendingApplicationAt(int sendingApplicationIndex);
     }
 }

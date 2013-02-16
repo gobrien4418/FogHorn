@@ -165,11 +165,6 @@ namespace Foghorn.WcfService
                            .ToDto();
         }
 
-        public SendingApplicationDto GetSendingApplicationAt(int sendingApplicationIndex)
-        {
-            return DataContext.SendingApplications.AsEnumerable().ElementAt(sendingApplicationIndex).ToDto();
-        }
-
         #endregion
     }
 }

@@ -35,7 +35,10 @@
       <HintPath>..\Foghorn.Core\bin\Debug\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Excel">
-      <HintPath>..\Foghorn.CustomAction\bin\Debug\Excel.dll</HintPath>
+      <HintPath>lib\Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>lib\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -82,6 +85,9 @@
     <Content Include="NotificationIcons\OrderPlaced.png" />
     <Content Include="NotificationIcons\OrderShipped.png" />
     <Content Include="NotificationIcons\TestNotification0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
