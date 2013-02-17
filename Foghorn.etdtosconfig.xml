@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntitiesToDtosConfiguration>
+  <GenerateAssemblers>true</GenerateAssemblers>
+  <DtosConfig>
+    <Target project="Foghorn.Core" name="Foghorn.Core" type="Project" />
+    <EDMXName>FoghornModel.edmx</EDMXName>
+    <GenerateFilter all="true" complex="true" entities="true" />
+    <SourceFileHeaderComment />
+    <UseProjectDefaultNamespace>true</UseProjectDefaultNamespace>
+    <SourceNamespace>Foghorn.Core</SourceNamespace>
+    <DtosServiceReady>true</DtosServiceReady>
+    <SourceFileGenerationType>OneSourceFile</SourceFileGenerationType>
+    <SourceFileName>ModelDtos.cs</SourceFileName>
+    <AssociationType>ClassType</AssociationType>
+    <GenerateDtoConstructors>true</GenerateDtoConstructors>
+    <ClassIdentifier use="Suffix" word="Dto" />
+  </DtosConfig>
+  <AssemblersConfig>
+    <Target project="Foghorn.Core" name="Foghorn.Core" type="Project" />
+    <SourceFileHeaderComment />
+    <UseProjectDefaultNamespace>true</UseProjectDefaultNamespace>
+    <SourceNamespace>Foghorn.Core</SourceNamespace>
+    <SourceFileGenerationType>OneSourceFile</SourceFileGenerationType>
+    <SourceFileName>ModelAssemblers.cs</SourceFileName>
+    <IsServiceReady>true</IsServiceReady>
+    <ClassIdentifier use="Suffix" word="Assembler" />
+  </AssemblersConfig>
+</EntitiesToDtosConfiguration>
