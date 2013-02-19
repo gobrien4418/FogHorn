@@ -153,9 +153,11 @@ namespace Foghorn.WcfService
             return DataContext.Subscribers.ToDtos();
         }
 
-        public ICollection<NotificationDto> GetNotifications(string sendingApplicationName)
+        public ICollection<NotificationDto> GetNotifications(string subscriberId)
         {
-            return DataContext.Notifications.ToDtos();
+            var subscriberIdGuid = new Guid(subscriberId);
+            var subscriber = DataContext.Subscribers.FirstOrDefault(x => x.SubscriberId == subscriberIdGuid);
+            return subscriber != null ? subscriber.NotificationsSent.ToDtos() : new List<NotificationDto>();
         }
 
         public SendingApplicationDto GetSendingApplication(string sendingApplicationName)

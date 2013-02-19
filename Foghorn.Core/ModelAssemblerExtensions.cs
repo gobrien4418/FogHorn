@@ -25,6 +25,23 @@ namespace Foghorn.Core
         static partial void OnDto(this SendingApplication entity, SendingApplicationDto dto)
         {
             dto.NotificationTypes = (List<NotificationTypeDto>) entity.NotificationTypes.ToDtos();
+            dto.Subscribers = (List<SubscriberDto>) entity.Subscribers.ToDtos();
         }
     }
+
+    public partial class NotificationAssembler
+    {
+        static partial void OnDto(this Notification entity, NotificationDto dto)
+        {
+            dto.SentToSubscribers = (List<SubscriberDto>) entity.SentToSubscribers.ToDtos();
+        }
+    }
+
+//    public partial class SubscriberAssembler
+//    {
+//        static partial void OnDto(this Subscriber entity, SubscriberDto dto)
+//        {
+//            dto.SendingApplication = entity.SendingApplication.ToDto();
+//        }
+//    }
 }
