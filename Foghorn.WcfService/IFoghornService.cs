@@ -23,7 +23,7 @@ using Foghorn.Core;
 
 namespace Foghorn.WcfService
 {
-    [ServiceContract]
+    [ServiceContract(Namespace = "http://www.objectiveadvantage.com/Foghorn/")]
     public interface IFoghornService
     {
         [OperationContract]

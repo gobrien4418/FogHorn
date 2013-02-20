@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel;
 using Foghorn.Core;
 using Foghorn.WcfService.Properties;
 using Growl.Connector;
@@ -29,6 +30,7 @@ using NotificationType = Foghorn.Core.NotificationType;
 
 namespace Foghorn.WcfService
 {
+    [ServiceBehavior(Namespace = "http://www.objectiveadvantage.com/Foghorn/", ConcurrencyMode = ConcurrencyMode.Single)]
     public class FoghornService : IFoghornService
     {
         private const string FailureMessage = "Something went wrong receiving a service call.";
